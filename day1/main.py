@@ -33,12 +33,13 @@ def get_calibration_value_part_two(string_value: str, digits_in_word: Dict) -> O
 
 def main():
 
+    # Load puzzle input
     puzzle_input = load_txt('resources/puzzle_input.txt')
 
     # Part 1
-    result_puzzle_input = [get_calibration_value_part_one(row)
+    result_puzzle_input_1 = [get_calibration_value_part_one(row)
                            for row in puzzle_input]
-    print(f"Sum of calibration values for part 1: {sum(result_puzzle_input)}")
+    print(f"Sum of calibration values for part 1: {sum(result_puzzle_input_1)}")
 
     # Part 2
     digits_in_word = {

@@ -6,7 +6,10 @@ from utils.io import load_txt
 SPECIAL_CHARACTERS = '*%#/$=@+&-'
 
 def retrieve_row_part_numbers(rows: List[str]) -> List[int]:
-
+    """
+    Retrieves part numbers for the second row in rows.
+    First and third rows are used to search for special charachters
+    """
     min_size = 0
     max_size = len(rows[0])
     part_numbers = []
@@ -21,21 +24,20 @@ def retrieve_row_part_numbers(rows: List[str]) -> List[int]:
     return part_numbers
 
 def retrieve_row_gear_ratios(rows: List[str]) -> List[int]:
-
+    """
+    Retrieves gear for the second row in rows.
+    First and third rows are used to search adjacent part numbers
+    """
     gear_ratios = []
-    min_size = 0
-    max_size = len(rows[0])
     candidates_gear = re.finditer(r'\*', rows[1])
     for match_gear in candidates_gear:
         gear_found = []
         gear_position = match_gear.start()
-
         for row in rows:
             candidates_numbers = re.finditer(r'\d+', row)
-            for match_number in candidates_numbers:
-                if gear_position >= match_number.start() - 1  \
-                    and gear_position <= match_number.end():
-                    gear_found.append(int(match_number.group(0)))
+            for number in candidates_numbers:
+                if gear_position >= number.start() - 1 and gear_position <= number.end():
+                    gear_found.append(int(number.group(0)))
         if len(gear_found) == 2:
             gear_ratios.append(gear_found[0] * gear_found[1])
     return gear_ratios
@@ -52,15 +54,15 @@ def main():
 
     part_numbers = [retrieve_row_part_numbers(puzzle_input[i:i+3])
                     for i in range(0, len(puzzle_input) - 2)]
-
+    
     sum_part_numbers = sum([sum(row_numbers) for row_numbers in part_numbers])
     print(f"Sum of part numbers: {sum_part_numbers}")
 
     # Part two
     gear_ratios = [retrieve_row_gear_ratios(puzzle_input[i:i+3])
                    for i in range(0, len(puzzle_input) - 2)]
-
     sum_gear_ratios = sum([sum(row_gear_ratios) for row_gear_ratios in gear_ratios])
     print(f"Sum of gear ratios: {sum_gear_ratios}")
+
 if __name__ == "__main__":
     main()
